@@ -204,7 +204,7 @@
   if (canvases.length) {
     let lib = null;
     const ensure = () => lib || (lib = loadThree().then(() => loadScript('assets/js/gl.js?v=1')));
-    if (hasWebGL) {
+    if (hasWebGL && !matchMedia('(max-width: 820px)').matches) { /* na mobile sa 600 kB Three.js kvôli dekorácii nesťahuje */
       const gio = new IntersectionObserver(es => es.forEach(e => {
         if (!e.isIntersecting) return;
         gio.unobserve(e.target);
