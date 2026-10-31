@@ -51,7 +51,7 @@ $ld = [
   <link rel="manifest" href="site.webmanifest">
   <link rel="preload" href="assets/fonts/jost-400-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/fonts.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=1">
+  <link rel="stylesheet" href="assets/css/style.css?v=<?= (int)@filemtime(__DIR__ . "/../assets/css/style.css") ?>">
   <script type="application/ld+json"><?= json_encode($ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
 </head>
 <body class="<?= e(trim(($bodyClass ?? '') . (!empty($announcement) ? ' has-bar' : ''))) ?>">
