@@ -1,9 +1,9 @@
 <?php
-$pageTitle = 'Cvičenia – reformer, barre, podložky, Ladder Barrel';
+$pageTitle = 'Lekcie – reformer, barre, podložky, Ladder Barrel';
 $pageDesc  = 'Prehľad cvičení v Organic Pilates Studio Žilina: čo je reformer, barre, Ladder Barrel, pilates na podložkách, Tehuľky pre tehotné a Vital Pilates pre seniorov.';
 require __DIR__ . '/includes/header.php';
 require __DIR__ . '/includes/partials.php';
-page_hero('Cvičenia', 'Čo je čo a <span class="script" style="font-size:1.15em">pre koho</span>', T('classes_lead'), true);
+page_hero('Lekcie', 'Čo je čo a <span class="script" style="font-size:1.15em">pre koho</span>', T('classes_lead'), true);
 
 /** Jedno médium ku cvičeniu: video (ak ho má), inak jedna fotka. Kliknutím sa otvorí v modálnom okne. */
 function class_media(array $c, string $alt): void {
@@ -24,7 +24,7 @@ function class_media(array $c, string $alt): void {
 ?>
 
 <div class="class-filter">
-  <nav class="wrap" aria-label="Skok na cvičenie">
+  <nav class="wrap" aria-label="Skok na lekciu">
     <?php foreach ($classes as $id => $c): ?><a class="chip-link" href="#<?= e($id) ?>"><?= e($c['name']) ?></a><?php endforeach; ?>
     <a class="chip-link" href="#individualne">Individuálne</a>
   </nav>
@@ -32,7 +32,7 @@ function class_media(array $c, string $alt): void {
 
 <?php $n = 0; foreach ($classes as $id => $c): $rev = $n++ % 2 === 1; ?>
 <section class="section <?= $rev ? 'soft' : '' ?>">
-  <div class="wrap split <?= $rev ? 'rev' : '' ?>">
+  <div class="wrap split flip-m <?= $rev ? 'rev' : '' ?>">
     <div class="split-media reveal <?= $rev ? 'reveal-right' : 'reveal-left' ?>">
       <?php class_media($c, $c['name'] . ' – Organic Pilates Studio Žilina'); ?>
     </div>
@@ -56,7 +56,7 @@ function class_media(array $c, string $alt): void {
 <?php endforeach; ?>
 
 <section class="section no-deco divided">
-  <div class="wrap split">
+  <div class="wrap split flip-m">
     <div class="split-media reveal reveal-left">
       <?php class_media(['images' => $individual['images'], 'name' => $individual['name']], 'Individuálna lekcia pilatesu'); ?>
     </div>
@@ -71,7 +71,7 @@ function class_media(array $c, string $alt): void {
   </div>
 </section>
 
-<?php reserve_banner('Našli ste svoje cvičenie? <span class="script">Rezervujte si ho</span>'); ?>
+<?php reserve_banner('Našli ste svoju lekciu? <span class="script">Rezervujte si ju</span>'); ?>
 
 <dialog class="media-modal" id="mediaModal" aria-label="Zväčšené médium">
   <button class="mm-close" type="button" aria-label="Zavrieť">×</button>

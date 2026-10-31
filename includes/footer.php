@@ -18,7 +18,7 @@
       <h3>Menu</h3>
       <ul class="plain">
         <li><a href="rezervacia.php">Rezervácia</a></li>
-        <li><a href="cvicenia.php">Cvičenia</a></li>
+        <li><a href="cvicenia.php">Lekcie</a></li>
         <li><a href="cennik.php">Cenník</a></li>
         <li><a href="poukazky.php">Poukážky</a></li>
         <li><a href="o-nas.php">O nás</a></li>

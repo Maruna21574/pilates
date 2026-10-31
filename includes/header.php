@@ -83,9 +83,9 @@ $ld = [
       <a href="index.php"<?= is_current('index.php') ?>>Úvod</a>
 
       <div class="nav-item has-drop mega-wide">
-        <a class="nav-link" href="cvicenia.php"<?= is_current('cvicenia.php') ?>>Cvičenia</a>
+        <a class="nav-link" href="cvicenia.php"<?= is_current('cvicenia.php') ?>>Lekcie</a>
         <button type="button" class="drop-toggle" aria-expanded="false" aria-label="Rozbaliť ponuku cvičení"><?= $chev ?></button>
-        <div class="mega" role="group" aria-label="Cvičenia">
+        <div class="mega" role="group" aria-label="Lekcie">
           <div class="mega-grid">
             <?php foreach ($classes as $id => $c): ?>
               <a class="mega-tile" href="cvicenia.php#<?= e($id) ?>">

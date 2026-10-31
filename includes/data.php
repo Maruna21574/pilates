@@ -272,7 +272,7 @@ $settings = ['voucher_validity_months' => 12, 'book_months' => 12, 'google_revie
 $text_defs = [
     // Úvodná stránka
     'home_hero_lead'    => ['g' => 'Úvodná stránka', 'l' => 'Úvodný text pod nadpisom', 't' => 'area', 'd' => 'Cvičenie v malých skupinách, na reformeri aj na podložkách. Pre začiatočníčky, tehotné, seniorov aj tých, ktorí chcú viac.'],
-    'home_classes_title'=> ['g' => 'Úvodná stránka', 'l' => 'Nadpis sekcie cvičení', 't' => 'line', 'd' => 'Nájdite cvičenie, ktoré vám sadne'],
+    'home_classes_title'=> ['g' => 'Úvodná stránka', 'l' => 'Nadpis sekcie lekcií', 't' => 'line', 'd' => 'Nájdite lekciu, ktorá vám sadne'],
     'home_classes_lead' => ['g' => 'Úvodná stránka', 'l' => 'Text pod nadpisom cvičení', 't' => 'area', 'd' => 'Každá lekcia je iná. Pozrite, čo je čo a pre koho je určené.'],
     'home_steps_title'  => ['g' => 'Úvodná stránka', 'l' => 'Nadpis „Ako to funguje“', 't' => 'line', 'd' => 'Od rezervácie po prvú hodinu'],
     'home_step1_title'  => ['g' => 'Úvodná stránka', 'l' => 'Krok 1 – nadpis', 't' => 'line', 'd' => 'Vyberte lekciu'],
@@ -286,7 +286,7 @@ $text_defs = [
     'home_studio_text'  => ['g' => 'Úvodná stránka', 'l' => 'Sekcia Štúdio – text', 't' => 'area', 'd' => 'Drevená podlaha, zrkadlá, rastliny a veľa denného svetla. Máme reformery, Ladder Barrel, barre tyče aj malé pomôcky, takže viete skúsiť viac než jeden štýl cvičenia.'],
     'reviews_title'     => ['g' => 'Úvodná stránka', 'l' => 'Nadpis recenzií', 't' => 'line', 'd' => 'Čo hovoria naše klientky'],
     // Ostatné stránky
-    'classes_lead'      => ['g' => 'Ostatné stránky', 'l' => 'Cvičenia – úvodný text', 't' => 'area', 'd' => 'Každé cvičenie má svoj štýl, tempo aj pomôcky. Vyberte si podľa toho, čo vám práve vyhovuje.'],
+    'classes_lead'      => ['g' => 'Ostatné stránky', 'l' => 'Lekcie – úvodný text', 't' => 'area', 'd' => 'Každá lekcia má svoj štýl, tempo aj pomôcky. Vyberte si podľa toho, čo vám práve vyhovuje.'],
     'book_lead'         => ['g' => 'Ostatné stránky', 'l' => 'Rezervácia – úvodný text', 't' => 'area', 'd' => 'Reformer je pre najviac 4 cvičiace, podložky a barre pre najviac 11. Pri každej lekcii vidíte voľné miesta.'],
     'price_lead'        => ['g' => 'Ostatné stránky', 'l' => 'Cenník – úvodný text', 't' => 'area', 'd' => 'Vyberte si službu a pozrite si, čo obsahuje a koľko stojí.'],
     'pass_title'        => ['g' => 'Ostatné stránky', 'l' => 'Cenník – permanentky: nadpis', 't' => 'line', 'd' => 'Permanentky a balíky'],

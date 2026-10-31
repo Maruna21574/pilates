@@ -11,7 +11,7 @@ page_hero('Rezervácia', 'Vyberte si <span class="script" style="font-size:1.15e
   <div class="wrap">
     <div class="booking" id="booking">
       <aside class="panel">
-        <h3>Cvičenie</h3>
+        <h3>Lekcia</h3>
         <div class="filters" id="filters" role="group" aria-label="Filter cvičení"></div>
         <p style="font-size:.9rem;color:var(--muted);margin:1.2rem 0 0">Individuálne lekcie a cvičenie podľa dohody: <a href="kontakt.php">kontaktujte nás</a>.</p>
       </aside>

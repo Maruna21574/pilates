@@ -13,7 +13,7 @@ require __DIR__ . '/includes/partials.php';
       <p class="lead reveal" style="--d:.16s"><?= e(T('home_hero_lead')) ?></p>
       <div class="btn-row reveal" style="--d:.24s">
         <a class="btn" href="rezervacia.php">Rezervovať miesto</a>
-        <a class="btn btn-ghost" href="cvicenia.php">Pozrieť cvičenia</a>
+        <a class="btn btn-ghost" href="cvicenia.php">Pozrieť lekcie</a>
       </div>
       <div class="next-box glass reveal" style="--d:.32s">
         <h2 class="next-title">Najbližšie voľné termíny</h2>
@@ -50,7 +50,7 @@ require __DIR__ . '/includes/partials.php';
 <section class="section">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">Cvičenia</span>
+      <span class="eyebrow">Lekcie</span>
       <h2><?= e(T('home_classes_title')) ?></h2>
       <p><?= e(T('home_classes_lead')) ?></p>
     </div>

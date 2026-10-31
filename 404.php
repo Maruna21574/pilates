@@ -14,7 +14,7 @@ page_hero('Chyba 404', 'Táto stránka sa <span class="script" style="font-size:
   <div class="wrap">
     <div class="lost">
       <a class="lost-card" href="index.php"><b>Úvod</b><span>Späť na hlavnú stránku</span></a>
-      <a class="lost-card" href="cvicenia.php"><b>Cvičenia</b><span>Čo je čo a pre koho</span></a>
+      <a class="lost-card" href="cvicenia.php"><b>Lekcie</b><span>Čo je čo a pre koho</span></a>
       <a class="lost-card" href="rezervacia.php"><b>Rezervácia</b><span>Vyberte si termín lekcie</span></a>
       <a class="lost-card" href="kontakt.php"><b>Kontakt</b><span>Radi vám poradíme</span></a>
     </div>

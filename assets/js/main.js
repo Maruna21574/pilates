@@ -443,7 +443,7 @@
     const renderFilters = () => {
       const inMonth = s => s.d.getFullYear() === view.y && s.d.getMonth() === view.m;
       const n = id => sessions.filter(s => inMonth(s) && (id === 'all' || s.cls.id === id)).length;
-      fEl.innerHTML = [{ id: 'all', name: 'Všetky cvičenia', blurb: 'Zobraziť všetky lekcie', color: '#5a8a84' }, ...OP.classes].map(c =>
+      fEl.innerHTML = [{ id: 'all', name: 'Všetky lekcie', blurb: 'Zobraziť všetky termíny', color: '#5a8a84' }, ...OP.classes].map(c =>
         `<button class="filter" style="--c:${c.color}" aria-pressed="${state.cls === c.id}" data-id="${c.id}"><i></i><span class="f-text"><b>${c.name}</b>${c.blurb ? `<small>${c.blurb}</small>` : ''}</span><em class="cnt">${n(c.id)}</em></button>`).join('');
     };
     const renderDays = () => {
