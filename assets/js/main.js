@@ -203,14 +203,17 @@
   const canvases = $$('canvas[data-gl]');
   if (canvases.length) {
     let lib = null;
-    const ensure = () => lib || (lib = loadThree().then(() => loadScript('assets/js/gl.js?v=1')));
-    if (hasWebGL && !matchMedia('(max-width: 820px)').matches) { /* na mobile sa 600 kB Three.js kvôli dekorácii nesťahuje */
+    const ensure = () => lib || (lib = loadThree().then(() => loadScript('assets/js/gl.js?v=2')));
+    if (hasWebGL) {
       const gio = new IntersectionObserver(es => es.forEach(e => {
         if (!e.isIntersecting) return;
         gio.unobserve(e.target);
         ensure().then(() => { window.OPGL(e.target, e.target.dataset.gl); e.target.classList.add('ready'); }).catch(() => {});
       }), { rootMargin: '400px' });
-      canvases.forEach(c => gio.observe(c));
+      /* dekorácia sa načíta až po zobrazení stránky, aby nebrzdila hero */
+      const start = () => canvases.forEach(c => gio.observe(c));
+      const later = () => (window.requestIdleCallback ? requestIdleCallback(start, { timeout: 2500 }) : setTimeout(start, 1200));
+      document.readyState === 'complete' ? later() : addEventListener('load', later, { once: true });
     }
   }
 

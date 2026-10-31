@@ -3,6 +3,7 @@
 (() => {
   'use strict';
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const small = matchMedia('(max-width: 820px)').matches;
 
   // Rozloženie: nx/ny sú relatívne k šírke/výške viditeľnej plochy (-1 … 1), nz je hĺbka.
   const LAYOUTS = {
@@ -27,8 +28,8 @@
   window.OPGL = function (canvas, variant = 'dark') {
     const T = window.THREE;
     const parent = canvas.parentElement;
-    const renderer = new T.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
+    const renderer = new T.WebGLRenderer({ canvas, alpha: true, antialias: !small });
+    renderer.setPixelRatio(small ? 1 : Math.min(devicePixelRatio || 1, 1.75));
     const scene = new T.Scene();
     const camera = new T.PerspectiveCamera(38, 1, .1, 60);
     camera.position.z = 9;
