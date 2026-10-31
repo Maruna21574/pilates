@@ -59,3 +59,13 @@ hostingu v nastavení PHP. Aktuálny limit vidno na stránke Videá v admine.
 - Nahrané obrázky sa prekódujú na JPG (odstráni sa skrytý obsah) a v ich priečinku sa nespúšťajú skripty.
 - Admin sa po 2 hodinách nečinnosti sám odhlási a vyhľadávače ho neindexujú.
 - Odporúčame zapnúť HTTPS (na Websupporte bezplatný certifikát) – bez neho sa heslo prenáša nešifrovane.
+
+## Rezervácie, databáza a platby (Stripe)
+Rezervácie sa ukladajú do MySQL; obsadenosť v kalendári a čakacia listina sa počítajú z nej. Prehľad je v admine (Rezervácie a platby).
+
+1. Na hostingu vytvorte MySQL databázu a skopírujte `data/config.sample.php` na `data/config.php` (nikdy nie do gitu) s údajmi k databáze. Tabuľky sa vytvoria samy pri prvom použití.
+2. Bez `data/config.php` web funguje po starom (rezervácia len e-mailom, bez online platby).
+3. Online platba sa zapne po vyplnení `stripe.secret_key` a `stripe.webhook_secret` a ceny lekcie v admine (Ceny, napr. „12 €“). Cena lekcie bez čísla = online platba sa pri nej nenaponúka.
+4. Stripe → Developers → Webhooks: pridajte endpoint `https://www.organicpilates.sk/api/stripe-webhook.php` s udalosťami `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.expired`, `charge.refunded`. Jeho „Signing secret“ (`whsec_…`) vložte do configu.
+5. Lokálne testovanie webhooku: `stripe listen --forward-to localhost/api/stripe-webhook.php`, testovacia karta 4242 4242 4242 4242.
+6. Vrátenie peňazí robíte v Stripe (Payments → Refund); rezervácia sa v admine sama označí ako „Vrátené“.

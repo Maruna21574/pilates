@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Europe/Bratislava');   // časy lekcií a rezervácií sú vždy slovenské
 /**
  * Jediné miesto, kde sa nastavuje obsah webu.
  * Typy cvičení, kapacity, tím a rozvrh sa menia tu – stránky sa generujú z týchto dát.
@@ -235,13 +236,61 @@ $videos = [
  * (frame, carriage, springs, footbar, shoulder, head, ropes); poradie = číslovanie bodov na modeli.
  */
 $reformer_parts = [
-    ['id' => 'frame',    'title' => 'Rám a koľajnice',   'text' => 'Pevný drevený rám nesie celý stroj. Po jeho koľajniciach sa plošina plynulo kĺže tam a späť.'],
+    ['id' => 'frame',    'title' => 'Rám a koľajnice',   'text' => 'Pevný čierny kovový rám nesie celý stroj. Po jeho koľajniciach sa plošina plynulo kĺže tam a späť.'],
     ['id' => 'carriage', 'title' => 'Pohyblivá plošina', 'text' => 'Čalúnená plošina na kolieskach, na ktorej ležíte, sedíte alebo kľačíte. Pri cvičení sa pohybuje a vaše telo musí tento pohyb kontrolovať, preto sa zapájajú aj hlboké svaly.'],
     ['id' => 'springs',  'title' => 'Pružiny',           'text' => 'Určujú odpor, teda ako náročný cvik je. Inštruktorka ich pre každý cvik pripojí alebo odpojí tak, aby bol správne náročný práve pre vás.'],
     ['id' => 'footbar',  'title' => 'Opierka nôh',       'text' => 'Pevná tyč, o ktorú sa zapierajú nohy alebo ruky pri tlaku. Býva nastaviteľná podľa postavy.'],
     ['id' => 'shoulder', 'title' => 'Opierky ramien',    'text' => 'Zabraňujú skĺznutiu tela, keď sa odtláčate nohami. Vďaka nim sa môžete sústrediť na správny a plynulý pohyb.'],
     ['id' => 'head',     'title' => 'Opierka hlavy',     'text' => 'Podopiera hlavu a krk, aby zostali uvoľnené. Dá sa prispôsobiť potrebám cvičiaceho.'],
     ['id' => 'ropes',    'title' => 'Popruhy a kladky',  'text' => 'Lanká vedené cez kladky, s rúčkami pre ruky alebo slučkami pre nohy. Využívajú sa pri cvikoch pre paže, ramená, chrbát a nohy a na rozsah pohybu.'],
+];
+
+/**
+ * Cenník vstupov a permanentiek (tabuľky v cenníku). Upravuje sa v admine (Ceny).
+ * Každá tabuľka: title, head (hlavička stĺpcov), rows (riadky, každý riadok = bunky v poradí stĺpcov).
+ */
+$price_tables = [
+    ['title' => 'Skupinové cvičenia: na podložkách a na reformeroch',
+     'head'  => ['Kredit / platnosť', 'Cena', 'Cena s permanentkou podložky / reformer'],
+     'rows'  => [
+        ['Podložky jednorazový', '11 €', '–'],
+        ['Reformer jednorazový', '22 €', '–'],
+        ['Kredit na 1 mesiac', '44 €', '38 € (9,50 / 19,– vstup)'],
+        ['Kredit na 1 mesiac', '88 €', '76 € (9,50 / 19,– vstup)'],
+        ['Kredit na 2 mesiace', '110 €', '90 € (9,– / 18,– vstup)'],
+        ['Kredit na 2 mesiace', '176 €', '144 € (9,– / 18,– vstup)'],
+        ['Kredit na 3 mesiace', '352 €', '272 € (8,50 / 17,– vstup)'],
+     ]],
+    ['title' => 'Vital Pilates',
+     'head'  => ['Vstup / platnosť', 'Cena'],
+     'rows'  => [
+        ['Jednorazový', '10 €'],
+        ['Permanentka 8 vstupov / 2 mesiace', '60 € (7,50 vstup)'],
+     ]],
+    ['title' => 'Individuálne cvičenie: 1 osoba',
+     'head'  => ['Vstup / platnosť', 'Cena', 'Cena s permanentkou'],
+     'rows'  => [
+        ['Jednorazový', '35 €', '–'],
+        ['4 vstupy / 1 mesiac', '140 €', '132 € (33,– vstup)'],
+        ['8 vstupov / 2 mesiace', '280 €', '256 € (32,– vstup)'],
+        ['16 vstupov / 3 mesiace', '560 €', '496 € (31,– vstup)'],
+     ]],
+    ['title' => 'Individuálne cvičenie: 2 – 3 osoby',
+     'head'  => ['Vstup / platnosť', 'Cena', 'Cena s permanentkou'],
+     'rows'  => [
+        ['Jednorazový za osobu', '24 €', '–'],
+        ['4 vstupy / 1 mesiac', '96 €', '88 € (22,– vstup)'],
+        ['8 vstupov / 2 mesiace', '192 €', '168 € (21,– vstup)'],
+        ['16 vstupov / 3 mesiace', '384 €', '320 € (20,– vstup)'],
+     ]],
+    ['title' => 'Individuálne cvičenie: 4 osoby',
+     'head'  => ['Vstup / platnosť', 'Cena', 'Cena s permanentkou'],
+     'rows'  => [
+        ['Jednorazový za osobu', '23 €', '–'],
+        ['4 vstupy / 1 mesiac', '92 €', '80 € (20,– vstup)'],
+        ['8 vstupov / 2 mesiace', '184 €', '152 € (19,– vstup)'],
+        ['16 vstupov / 3 mesiace', '368 €', '288 € (18,– vstup)'],
+     ]],
 ];
 
 /** Kategórie fotiek v galérii. */
@@ -290,7 +339,9 @@ $text_defs = [
     'book_lead'         => ['g' => 'Ostatné stránky', 'l' => 'Rezervácia – úvodný text', 't' => 'area', 'd' => 'Reformer je pre najviac 4 cvičiace, podložky a barre pre najviac 11. Pri každej lekcii vidíte voľné miesta.'],
     'price_lead'        => ['g' => 'Ostatné stránky', 'l' => 'Cenník – úvodný text', 't' => 'area', 'd' => 'Vyberte si službu a pozrite si, čo obsahuje a koľko stojí.'],
     'pass_title'        => ['g' => 'Ostatné stránky', 'l' => 'Cenník – permanentky: nadpis', 't' => 'line', 'd' => 'Permanentky a balíky'],
-    'pass_text'         => ['g' => 'Ostatné stránky', 'l' => 'Cenník – permanentky: text', 't' => 'area', 'd' => 'Viac vstupov za výhodnejšiu cenu. Podmienky a platnosť určí štúdio.'],
+    'pass_text'         => ['g' => 'Ostatné stránky', 'l' => 'Cenník – permanentky: text', 't' => 'area', 'd' => 'Viac vstupov za výhodnejšiu cenu. Ceny tabuliek upravíte v Ceny.'],
+    'price_valid'       => ['g' => 'Ostatné stránky', 'l' => 'Cenník – platnosť', 't' => 'line', 'd' => 'Platný od 1. 5. 2026'],
+    'price_note'        => ['g' => 'Ostatné stránky', 'l' => 'Cenník – poznámka pod tabuľkami', 't' => 'area', 'd' => 'Dĺžka cvičenia (lekcie) je 50 min. Všetky permanentky sú neprenosné a časovo obmedzené.'],
     'gift_lead'         => ['g' => 'Ostatné stránky', 'l' => 'Poukážky – úvodný text', 't' => 'area', 'd' => 'Darčeková poukážka na lekcie pilatesu. Obdarovaná osoba si cvičenie aj termín vyberie sama.'],
     'gift_title'        => ['g' => 'Ostatné stránky', 'l' => 'Poukážky – nadpis', 't' => 'line', 'd' => 'Darček, ktorý poteší telo aj hlavu'],
     'gift_text'         => ['g' => 'Ostatné stránky', 'l' => 'Poukážky – popis', 't' => 'area', 'd' => 'Môžete darovať poukážku na ľubovoľnú sumu alebo na konkrétne cvičenie. Stačí vyplniť formulár a my sa vám ozveme.'],
@@ -325,10 +376,10 @@ $voucher_secret = 'bfe5d3135e22cb272d7dd559d6ebfdb757540e932b4d0e6c';
 /* ---------- uplatnenie zmien z admin panela (data/content.json) ---------- */
 require_once __DIR__ . '/content.php';
 $__d = ['site' => $site, 'classes' => $classes, 'individual' => $individual, 'team' => $team, 'schedule' => $schedule, 'faq' => $faq,
-        'reviews' => $reviews, 'announcement' => $announcement, 'settings' => $settings, 'hero_slides' => $hero_slides, 'gallery' => gallery_default(), 'texts' => $texts, 'videos' => $videos];
+        'reviews' => $reviews, 'announcement' => $announcement, 'settings' => $settings, 'hero_slides' => $hero_slides, 'gallery' => gallery_default(), 'texts' => $texts, 'videos' => $videos, 'price_tables' => $price_tables];
 $__r = content_apply($__d, content_load());
-[$site, $classes, $individual, $team, $schedule, $faq, $reviews, $announcement, $settings, $hero_slides, $gallery, $texts, $videos] =
-    [$__r['site'], $__r['classes'], $__r['individual'], $__r['team'], $__r['schedule'], $__r['faq'], $__r['reviews'], $__r['announcement'], $__r['settings'], $__r['hero_slides'], $__r['gallery'], $__r['texts'], $__r['videos']];
+[$site, $classes, $individual, $team, $schedule, $faq, $reviews, $announcement, $settings, $hero_slides, $gallery, $texts, $videos, $price_tables] =
+    [$__r['site'], $__r['classes'], $__r['individual'], $__r['team'], $__r['schedule'], $__r['faq'], $__r['reviews'], $__r['announcement'], $__r['settings'], $__r['hero_slides'], $__r['gallery'], $__r['texts'], $__r['videos'], $__r['price_tables']];
 $videos_home    = array_values(array_filter($videos, fn($v) => $v['home']));
 $videos_gallery = array_values(array_filter($videos, fn($v) => $v['gallery']));
 $voucher_validity_months = $settings['voucher_validity_months'];

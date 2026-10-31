@@ -58,7 +58,7 @@
     /* ---------- materiály ---------- */
     const mat = (hex, o = {}) => new T.MeshStandardMaterial(Object.assign({ color: lin(hex), roughness: 0.6, metalness: 0 }, o));
     const M = {
-      wood: () => mat(0xc9995f, { roughness: 0.5 }),
+      frame: () => mat(0x26292c, { roughness: 0.38, metalness: 0.7 }),   // čierny kovový rám (satin)
       leather: () => mat(0x1b1d1f, { roughness: 0.42 }),
       steel: () => mat(0xc3cbcd, { roughness: 0.24, metalness: 1 }),
       dark: () => mat(0x23272a, { roughness: 0.4, metalness: 0.85 }),
@@ -104,7 +104,7 @@
 
     /* ---------- model ---------- */
     const model = new T.Group(); scene.add(model);
-    const L = 2.3, frameMat = reg('frame', M.wood());
+    const L = 2.3, frameMat = reg('frame', M.frame());
     const tracksMat = reg('frame', mat(0xb9c2c4, { roughness: 0.3, metalness: 1 }));
     const legMat = frameMat;
 
@@ -122,7 +122,7 @@
 
     // pohyblivá plošina
     const carriage = new T.Group(); model.add(carriage);
-    const cBase = reg('carriage', M.wood()), cPad = reg('carriage', M.leather());
+    const cBase = reg('carriage', M.frame()), cPad = reg('carriage', M.leather());
     box(carriage, 1.05, 0.035, 0.60, cBase, 0, 0.392, 0);
     pad(carriage, 1.03, 0.08, 0.54, 0.06, cPad, 0, 0.4095, 0);
     const wheelMat = reg('carriage', M.dark());
@@ -162,7 +162,7 @@
     for (const z of [-0.12, 0.12]) cyl(model, 0.024, 0.17, fbGrip, 1.03, 0.64, z, 'z', 20);
 
     // zadná časť: stĺpiky, kladky a popruhy
-    const postMat = reg('ropes', M.wood()), pulMat = reg('ropes', M.dark()), ropeMat = reg('ropes', M.rope()), handleMat = reg('ropes', M.teal());
+    const postMat = reg('ropes', M.frame()), pulMat = reg('ropes', M.steel()), ropeMat = reg('ropes', M.rope()), handleMat = reg('ropes', M.teal());
     for (const z of [-0.27, 0.27]) box(model, 0.052, 0.42, 0.052, postMat, -1.08, 0.545, z);
     box(model, 0.052, 0.05, 0.60, postMat, -1.08, 0.775, 0);
     const PULX = -1.045, PULY = 0.69, PR = 0.032;

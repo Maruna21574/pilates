@@ -141,6 +141,24 @@ function content_apply(array $d, array $o): array {
         if (c_str($r['individual']['name'] ?? '') === '') $r['individual']['name'] = $b['name'];
     }
 
+    if (isset($o['price_tables']) && is_array($o['price_tables'])) {
+        $list = [];
+        foreach ($o['price_tables'] as $t) {
+            if (!is_array($t) || c_str($t['title'] ?? '') === '') continue;
+            $head = array_map('c_str', array_values((array)($t['head'] ?? [])));
+            $n = count($head);
+            if ($n < 1) continue;
+            $rows = [];
+            foreach ((array)($t['rows'] ?? []) as $row) {
+                if (!is_array($row)) continue;
+                $row = array_map('c_str', array_values($row));
+                $rows[] = array_slice(array_pad($row, $n, ''), 0, $n);
+            }
+            $list[] = ['title' => c_str($t['title']), 'head' => $head, 'rows' => $rows];
+        }
+        $r['price_tables'] = $list;
+    }
+
     if (isset($o['team']) && is_array($o['team'])) {
         $list = [];
         foreach ($o['team'] as $m) {

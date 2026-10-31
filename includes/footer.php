@@ -48,10 +48,15 @@
 
 <a class="sticky-cta btn" href="rezervacia.php">Rezervovať miesto</a>
 
+<?php require_once __DIR__ . '/booking.php'; $__online = stripe_enabled(); ?>
 <script>window.OP = <?= json_encode([
-    'classes' => array_map(fn($c, $k) => ['id' => $k, 'name' => $c['name'], 'capacity' => $c['capacity'], 'duration' => $c['duration'], 'color' => $c['color'], 'blurb' => $c['blurb'] ?? ''], $classes, array_keys($classes)),
+    'classes' => array_map(fn($c, $k) => ['id' => $k, 'name' => $c['name'], 'capacity' => $c['capacity'], 'duration' => $c['duration'], 'color' => $c['color'], 'blurb' => $c['blurb'] ?? '',
+        'price' => $__online && price_to_cents($c['price'] ?? null) ? reservation_money(price_to_cents($c['price'])) : ''], $classes, array_keys($classes)),
     'schedule' => $schedule,
     'bookMonths' => $settings['book_months'],
+    'taken' => (object)seats_overview(),   // obsadenosť termínov z databázy
+    'payOnline' => $__online,
+    'stripeKey' => $__online ? (string)booking_config()['stripe']['publishable_key'] : '',
 ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
 <script src="assets/js/main.js?v=<?= (int)@filemtime(__DIR__ . "/../assets/js/main.js") ?>" defer></script>
 </body>

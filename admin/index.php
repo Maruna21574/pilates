@@ -6,7 +6,7 @@ admin_headers();
 admin_session();
 require_login();
 
-$pages = ['home', 'site', 'announce', 'texts', 'classes', 'individual', 'prices', 'schedule', 'team', 'reviews', 'faq', 'slider', 'gallery', 'videos', 'media', 'settings', 'password', 'backups'];
+$pages = ['home', 'reservations', 'site', 'announce', 'texts', 'classes', 'individual', 'prices', 'schedule', 'team', 'reviews', 'faq', 'slider', 'gallery', 'videos', 'media', 'settings', 'password', 'backups'];
 $p = (string)($_GET['p'] ?? 'home');
 if (!in_array($p, $pages, true)) $p = 'home';
 

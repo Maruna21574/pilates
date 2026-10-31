@@ -1,5 +1,5 @@
 # runtime dáta a tajomstvá (nikdy do gitu)
-data/admin.json.php
+data/admin.json.php*
 data/content.json
 data/backups/*
 data/login-attempts*
@@ -8,3 +8,6 @@ assets/media/uploads/*
 !assets/media/uploads/.htaccess
 mkadmin.php
 *.tmp
+
+data/config.php
+data/.lock

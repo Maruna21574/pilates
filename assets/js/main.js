@@ -193,7 +193,7 @@
       const rio = new IntersectionObserver(([e]) => {
         if (!e.isIntersecting) return;
         rio.disconnect();
-        loadThree().then(() => loadScript('assets/js/reformer3d.js?v=2')).then(() => window.OPReformer(r3d)).catch(() => r3d.classList.add('no-3d'));
+        loadThree().then(() => loadScript('assets/js/reformer3d.js?v=3')).then(() => window.OPReformer(r3d)).catch(() => r3d.classList.add('no-3d'));
       }, { rootMargin: '600px' });
       rio.observe(r3d);
     }
@@ -378,14 +378,13 @@
     });
   }
 
-  /* ---------- Booking (ukážka: rezervácie sa zatiaľ neukladajú) ---------- */
+  /* ---------- Booking (obsadenosť prichádza z databázy cez OP.taken) ---------- */
   const OP = window.OP || { classes: [], schedule: [] };
   const classes = Object.fromEntries(OP.classes.map(c => [c.id, c]));
   const DAYS = ['Ne', 'Po', 'Ut', 'St', 'Št', 'Pi', 'So'];
   const DAY_NAMES = ['nedeľa', 'pondelok', 'utorok', 'streda', 'štvrtok', 'piatok', 'sobota'];
   const MONTHS = ['jan', 'feb', 'mar', 'apr', 'máj', 'jún', 'júl', 'aug', 'sep', 'okt', 'nov', 'dec'];
   const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  const hash = s => { let h = 2166136261; for (const ch of s) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return (h >>> 0); };
 
   /* Dopredu sa dá rezervovať 12 mesiacov (aktuálny + ďalších 11); mení sa tu */
   const BOOK_MONTHS = Math.max(1, Math.min(24, +OP.bookMonths || 12));
@@ -404,8 +403,7 @@
         if (start < now) return;
         const c = classes[s.class]; if (!c) return;
         const key = `${iso(d)}|${s.time}|${s.class}`;
-        const r = hash(key) % 100;
-        const taken = r < 22 ? c.capacity : Math.min(c.capacity - 1, Math.floor((r / 100) * c.capacity));
+        const taken = Math.min(c.capacity, +(OP.taken || {})[key] || 0);
         out.push({ key, date: iso(d), d, time: s.time, cls: c, taken });
       });
     }
@@ -511,10 +509,41 @@
       $('#bm-title').textContent = 'Rezervácia lekcie';
       $('#bm-sub').textContent = 'Skontrolujte údaje a vyplňte kontakt';
       $('#bm-err').hidden = true;
-      form.reset(); form.dataset.key = s.key; msg.hidden = true; form.hidden = false; dlg.showModal();
+      form.reset(); form.dataset.key = s.key;
+      const payBox = $('#bm-pay', form);
+      payBox.hidden = s.taken >= s.cls.capacity || !OP.payOnline || !s.cls.price;   // online platba len pri voľnom mieste a vyplnenej cene
+      $('#bm-price', form).textContent = s.cls.price || ''; msg.hidden = true; form.hidden = false; dlg.showModal();
     });
+    /* Online platba: Stripe Embedded Checkout priamo v okne. Zavretie okna pred zaplatením uvoľní podržané miesto. */
+    const payBox = $('#bm-checkout', dlg), payMount = $('#bm-checkout-mount', dlg);
+    let checkout = null, pendingId = null, stripeLib = null;
+    const loadStripe = () => stripeLib || (stripeLib = new Promise((ok, fail) => {
+      if (window.Stripe) return ok(window.Stripe);
+      const sc = document.createElement('script');
+      sc.src = 'https://js.stripe.com/v3/'; sc.onload = () => ok(window.Stripe); sc.onerror = () => { stripeLib = null; fail(new Error('Platobnú bránu sa nepodarilo načítať.')); };
+      document.head.appendChild(sc);
+    }));
+    const dropCheckout = () => { try { checkout?.destroy(); } catch (_) {} checkout = null; payMount.innerHTML = ''; payBox.hidden = true; };
+    const releaseSeat = () => {              // zákazník platbu nedokončil: miesto sa uvoľní hneď
+      if (!pendingId) return;
+      const fd = new FormData(); fd.set('id', pendingId); fd.set('cancel', '1');
+      navigator.sendBeacon ? navigator.sendBeacon('api/reservation.php', fd) : fetch('api/reservation.php', { method: 'POST', body: fd, keepalive: true });
+      pendingId = null;
+    };
+    dlg.addEventListener('close', () => { releaseSeat(); dropCheckout(); });
+    $('#bm-checkout-back', dlg).addEventListener('click', () => { releaseSeat(); dropCheckout(); form.hidden = false; $('#bm-title').textContent = 'Rezervácia lekcie'; $('#bm-sub').textContent = 'Skontrolujte údaje a vyplňte kontakt'; });
     $('.close', dlg).addEventListener('click', () => dlg.close());
     dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+    const showDone = (title, sub, h, extra) => {
+      $('#bm-title').textContent = title; $('#bm-sub').textContent = sub;
+      msg.className = 'done';
+      msg.innerHTML = `<span class="done-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+        <h4></h4><p><strong></strong></p><p></p>
+        <button type="button" class="btn btn-primary btn-sm" data-done>Zavrieť</button>`;
+      $('h4', msg).textContent = h; $('strong', msg).textContent = form.dataset.summary || ''; $('p:last-of-type', msg).textContent = extra;
+      $('[data-done]', msg).addEventListener('click', () => dlg.close());
+      msg.hidden = false; form.hidden = true; payBox.hidden = true;
+    };
     const err = $('#bm-err'), submitBtn = $('button[type=submit]', form);
     form.addEventListener('submit', async e => {
       e.preventDefault();
@@ -523,20 +552,33 @@
       data.set('date', date); data.set('time', time); data.set('class', cls);
       submitBtn.disabled = true; err.hidden = true;
       try {
+        if ($('#bm-pay', form).hidden) data.delete('pay');
         const r = await fetch('api/reserve.php', { method: 'POST', body: data });
         const j = await r.json();
         if (!j.ok) throw new Error(j.message);
-        $('#bm-title').textContent = 'Ďakujeme!';
-        $('#bm-sub').textContent = 'Vašu žiadosť sme prijali';
-        msg.className = 'done';
-        msg.innerHTML = `<span class="done-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
-          <h4>Rezerváciu sme prijali</h4>
-          <p><strong></strong></p>
-          <p>Potvrdenie o prijatí žiadosti sme poslali na váš e-mail.</p>
-          <button type="button" class="btn btn-primary btn-sm" data-done>Zavrieť</button>`;
-        $('strong', msg).textContent = form.dataset.summary || '';
-        $('[data-done]', msg).addEventListener('click', () => dlg.close());
-        msg.hidden = false; form.hidden = true;
+        if (j.clientSecret) {                                          // online platba: formulár Stripe v tomto okne
+          const Stripe = await loadStripe();
+          pendingId = j.reservation;
+          form.hidden = true; payBox.hidden = false;
+          $('#bm-title').textContent = 'Platba'; $('#bm-sub').textContent = 'Miesto držíme, kým platbu dokončíte';
+          checkout = await Stripe(OP.stripeKey).initEmbeddedCheckout({
+            clientSecret: j.clientSecret,
+            onComplete: async () => {
+              const id = pendingId; pendingId = null;                  // zaplatené – miesto sa už neuvoľňuje
+              let paid = false;
+              try { paid = (await (await fetch('api/reservation.php?id=' + id)).json()).status === 'paid'; } catch (_) {}
+              dropCheckout();
+              showDone('Ďakujeme!', 'Platba prebehla', 'Rezerváciu sme prijali', paid ? 'Miesto je potvrdené a potvrdenie sme poslali na váš e-mail.' : 'Platbu ešte overujeme, potvrdenie dostanete e-mailom.');
+            },
+          });
+          checkout.mount(payMount);
+          submitBtn.disabled = false;
+          return;
+        }
+        const wl = j.status === 'waitlist';
+        showDone('Ďakujeme!', wl ? 'Zapísali sme vás na čakaciu listinu' : j.status === 'request' ? 'Vašu žiadosť sme prijali' : 'Rezervácia je uložená',
+          wl ? 'Ste na čakacej listine' : j.status === 'request' ? 'Žiadosť sme prijali' : 'Rezerváciu sme prijali',
+          (j.status === 'on_site' ? 'Lekciu zaplatíte na mieste. ' : '') + 'Potvrdenie sme poslali na váš e-mail.');
       } catch (ex) {
         err.textContent = ex.message && ex.message !== 'Failed to fetch' ? ex.message : 'Rezerváciu sa nepodarilo odoslať. Skúste to prosím neskôr alebo nám zavolajte.';
         err.hidden = false;

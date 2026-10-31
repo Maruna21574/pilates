@@ -53,14 +53,32 @@ function service_card(string $id, array $item, string $href, string $btn): void 
       <?php service_card('individualne', $individual, 'kontakt.php', 'Dohodnúť lekciu'); ?>
     </div>
 
-    <div class="pass reveal">
-      <div>
-        <h3><?= e(T('pass_title')) ?></h3>
-        <p><?= e(T('pass_text')) ?></p>
+    <?php if ($price_tables): ?>
+    <div class="ptables">
+      <div class="svc-head reveal">
+        <div>
+          <h2><?= e(T('pass_title')) ?></h2>
+          <p class="ptables-lead"><?= e(T('pass_text')) ?><?php if (T('price_valid') !== ''): ?> <b><?= e(T('price_valid')) ?></b><?php endif; ?></p>
+        </div>
       </div>
-      <div class="pass-price"><?php if (!empty($settings['pass_price'])): ?><?= e($settings['pass_price']) ?><?php else: ?><span class="placeholder">00 €</span><?php endif; ?><small>/ balík</small></div>
-      <a class="btn btn-sm" href="kontakt.php">Opýtať sa</a>
+      <div class="ptables-grid">
+        <?php foreach ($price_tables as $t): ?>
+        <div class="ptable reveal">
+          <h3><?= e($t['title']) ?></h3>
+          <div class="ptable-scroll"><table>
+            <thead><tr><?php foreach ($t['head'] as $h): ?><th><?= e($h) ?></th><?php endforeach; ?></tr></thead>
+            <tbody>
+              <?php foreach ($t['rows'] as $row): ?>
+              <tr><?php foreach ($row as $i => $cell): ?><<?= $i === 0 ? 'th scope="row"' : 'td' ?>><?= e($cell) ?></<?= $i === 0 ? 'th' : 'td' ?>><?php endforeach; ?></tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table></div>
+        </div>
+        <?php endforeach; ?>
+      </div>
+      <?php if (T('price_note') !== ''): ?><p class="ptables-note reveal"><?= e(T('price_note')) ?></p><?php endif; ?>
     </div>
+    <?php endif; ?>
 
     <div class="pass pass-gift reveal">
       <div>

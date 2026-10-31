@@ -157,6 +157,7 @@ function slugify(string $s): string {
 
 const ADMIN_NAV = [
     ['Prehľad', [['home', 'Prehľad', 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z']]],
+    ['Rezervácie', [['reservations', 'Rezervácie a platby', 'M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1zM4 10h16M9 15l2 2 4-4']]],
     ['Obsah webu', [
         ['classes',    'Cvičenia',             'M4 7h16M4 12h16M4 17h10'],
         ['individual', 'Individuálne lekcie',  'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0'],

@@ -3,12 +3,39 @@ $pageTitle = 'Rezervácia lekcií';
 $pageDesc  = 'Rezervujte si miesto na lekcii pilatesu v Žiline. Vyberte cvičenie, deň a čas a pozrite si počet voľných miest.';
 $bodyClass = 'page-booking';
 require __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/includes/booking.php';
 require __DIR__ . '/includes/partials.php';
 page_hero('Rezervácia', 'Vyberte si <span class="script" style="font-size:1.15em">svoj termín</span>', T('book_lead'), true);
 ?>
 
+<?php
+// návrat zo Stripe: ?paid=<id> po platbe, ?cancel=<id> keď zákazník platbu zrušil
+$note = null;
+if ($pdo = db()) {
+    $rid = (string)($_GET['paid'] ?? $_GET['cancel'] ?? '');
+    if (preg_match('/^[0-9a-f]{32}$/', $rid)) {
+        $st = $pdo->prepare('SELECT * FROM reservations WHERE public_id = ?');
+        $st->execute([$rid]);
+        if ($rrow = $st->fetch()) {
+            [, , $what] = reservation_when($rrow);
+            if (isset($_GET['paid'])) {
+                reservation_sync_from_stripe($rrow);   // webhook mohol ešte nedorazit
+                $st->execute([$rid]);
+                $rrow = $st->fetch();
+                $note = $rrow['status'] === 'paid'
+                    ? ['ok', 'Platba prebehla, ďakujeme! Miesto na lekcii je potvrdené: ' . $what . '. Potvrdenie sme poslali na ' . $rrow['email'] . '.']
+                    : ['warn', 'Vašu platbu ešte overujeme. Potvrdenie dostanete e-mailom, ak by nedorazilo do niekoľkých minút, napíšte nám.'];
+            } elseif ($rrow['status'] === 'pending') {
+                $pdo->prepare("UPDATE reservations SET status = 'expired' WHERE id = ? AND status = 'pending'")->execute([$rrow['id']]);
+                $note = ['warn', 'Platbu ste zrušili, rezerváciu sme neuložili. Termín si môžete vybrať znova.'];
+            }
+        }
+    }
+}
+?>
 <section class="section" style="padding-top:3rem">
   <div class="wrap">
+    <?php if ($note): ?><div class="book-note <?= e($note[0]) ?>" role="status"><?= e($note[1]) ?></div><?php endif; ?>
     <div class="booking" id="booking">
       <aside class="panel">
         <h3>Lekcia</h3>
@@ -47,6 +74,11 @@ page_hero('Rezervácia', 'Vyberte si <span class="script" style="font-size:1.15e
     <div class="field"><label for="bm-name">Meno a priezvisko</label><input id="bm-name" name="name" required autocomplete="name"></div>
     <div class="field"><label for="bm-email">E-mail</label><input id="bm-email" name="email" type="email" required autocomplete="email"></div>
     <div class="field"><label for="bm-phone">Telefón</label><input id="bm-phone" name="phone" type="tel" required autocomplete="tel"></div>
+    <fieldset class="pay-choice" id="bm-pay" hidden>
+      <legend>Platba</legend>
+      <label class="pay-opt"><input type="radio" name="pay" value="online" checked><span>Zaplatiť online kartou<small>Miesto je potvrdené hneď po zaplatení</small></span><b id="bm-price"></b></label>
+      <label class="pay-opt"><input type="radio" name="pay" value="on_site"><span>Zaplatiť na mieste<small>V štúdiu pred lekciou</small></span></label>
+    </fieldset>
     <label class="check">
       <input type="checkbox" name="gdpr" value="1" required>
       <span>Súhlasím so spracovaním osobných údajov na účel vybavenia rezervácie. Podrobnosti nájdete v <a href="ochrana-udajov.php" target="_blank" rel="noopener">zásadách ochrany osobných údajov</a>.</span>
@@ -55,6 +87,10 @@ page_hero('Rezervácia', 'Vyberte si <span class="script" style="font-size:1.15e
     <div class="form-msg err" id="bm-err" hidden></div>
     <button class="btn btn-primary" type="submit">Potvrdiť rezerváciu</button>
   </form>
+  <div class="pay-embed" id="bm-checkout" hidden>
+    <div id="bm-checkout-mount"></div>
+    <button type="button" class="btn btn-sm btn-ghost-dark" id="bm-checkout-back">← Späť, zrušiť platbu</button>
+  </div>
   <div class="form-msg" id="bm-msg" hidden></div>
 </dialog>
 
