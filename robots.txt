@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /poukazka-tlac.php
+Disallow: /includes/
+
+Sitemap: https://www.organicpilates.sk/sitemap.xml

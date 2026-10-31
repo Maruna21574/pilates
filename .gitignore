@@ -1,0 +1,10 @@
+# runtime dáta a tajomstvá (nikdy do gitu)
+data/admin.json.php
+data/content.json
+data/backups/*
+data/login-attempts*
+data/*.log
+assets/media/uploads/*
+!assets/media/uploads/.htaccess
+mkadmin.php
+*.tmp
