@@ -273,7 +273,7 @@
     function select(id) {
       active = id;
       const li = list.find(x => x.dataset.part === id);
-      if (card && li) { cardT.textContent = li.querySelector('.r3d-name').textContent; cardP.textContent = li.querySelector('.r3d-text').textContent; card.hidden = false; stage.classList.add('touched'); placeCard(); }
+      if (card && li) { cardT.textContent = li.querySelector('.r3d-name').textContent; cardP.textContent = li.querySelector('.r3d-text').textContent; card.hidden = false; stage.classList.add('touched'); placeCard(false); }
       list.forEach(li => { const on = li.dataset.part === id; li.classList.toggle('active', on); li.querySelector('.r3d-head').setAttribute('aria-expanded', on); });
       pins.forEach(p => p.b.classList.toggle('active', p.id === id));
       const v = VIEW[id]; if (v) flyTo(v[0], v[1], v[2], focusOf(id));
@@ -304,25 +304,28 @@
         p.sx = (proj.x + 1) / 2 * w; p.sy = (1 - proj.y) / 2 * h; p.out = out;
         // bod, ktorý by ostal pod kartou s popisom, sa skryje (vybraný bod nikdy), aby sa nič neprekrývalo
         const underCard = cardRect && p.id !== active && p.sx > cardRect.l && p.sx < cardRect.r && p.sy > cardRect.t && p.sy < cardRect.b;
-        p.b.style.visibility = (out || underCard) ? 'hidden' : 'visible';
+        p.b.classList.toggle('hid', !!(out || underCard));
       });
     }
     /* Karta s popisom si vyberie z 4 rohov to miesto, kde zakrýva najmenej bodov (vybraný bod nesmie zakryť vôbec). */
-    let cardRect = null;
-    function placeCard() {
+    let cardRect = null, curPos = 'bl';   // karta zostáva na mieste; presunie sa len keď by zakrývala aktívny bod
+    function placeCard(move = true) {
       if (!card || card.hidden) { cardRect = null; return; }
       const sw = stage.clientWidth, sh = stage.clientHeight, m = 16, bot = matchMedia('(max-width: 520px)').matches ? 70 : 75;
       const cw = card.offsetWidth, ch = card.offsetHeight;
       const rects = { bl: { l: m, t: sh - bot - ch }, br: { l: sw - m - cw, t: sh - bot - ch }, tl: { l: m, t: m }, tr: { l: sw - m - cw, t: m } };
-      let best = 'bl', bestScore = Infinity;
-      ['bl', 'br', 'tl', 'tr'].forEach((k, i) => {
+      let best = curPos, bestScore = Infinity;
+      const scoreOf = (k, i) => {
         const r = rects[k]; let s = i * 0.01;
         pins.forEach(p => {
           if (p.out || p.sx === undefined) return;
           if (p.sx > r.l - 16 && p.sx < r.l + cw + 16 && p.sy > r.t - 16 && p.sy < r.t + ch + 16) s += p.id === active ? 10 : 1;
         });
-        if (s < bestScore) { bestScore = s; best = k; }
-      });
+        return s;
+      };
+      const order = ['bl', 'br', 'tl', 'tr'];
+      if (move && scoreOf(curPos, order.indexOf(curPos)) >= 10) order.forEach((k, i) => { const s = scoreOf(k, i); if (s < bestScore) { bestScore = s; best = k; } });
+      curPos = best;
       card.classList.remove('pos-bl', 'pos-br', 'pos-tl', 'pos-tr'); card.classList.add('pos-' + best);
       const r = rects[best]; cardRect = { l: r.l - 14, t: r.t - 14, r: r.l + cw + 14, b: r.t + ch + 14 };
     }

@@ -193,7 +193,7 @@
       const rio = new IntersectionObserver(([e]) => {
         if (!e.isIntersecting) return;
         rio.disconnect();
-        loadThree().then(() => loadScript('assets/js/reformer3d.js?v=1')).then(() => window.OPReformer(r3d)).catch(() => r3d.classList.add('no-3d'));
+        loadThree().then(() => loadScript('assets/js/reformer3d.js?v=2')).then(() => window.OPReformer(r3d)).catch(() => r3d.classList.add('no-3d'));
       }, { rootMargin: '600px' });
       rio.observe(r3d);
     }

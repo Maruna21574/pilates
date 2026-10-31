@@ -776,6 +776,7 @@ dialog { overscroll-behavior: contain; }
 .r3d-pin.active .r3d-pin-i, .r3d-pin:focus-visible .r3d-pin-i { background: var(--t700); color: #fff; transform: scale(1.14); }
 @media (hover:hover){.r3d-pin:hover .r3d-pin-i { background: var(--t700); color: #fff; transform: scale(1.14); }}
 .r3d-pin.behind { opacity: .25; }
+.r3d-pin.hid { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .3s, visibility 0s .3s; }   /* plynulé skrytie bodu pod kartou */
 .r3d-pin.active::after { content: ''; position: absolute; inset: -7px; border-radius: 50%; border: 2px solid var(--wood); animation: pinring 1.8s ease-out infinite; pointer-events: none; }
 @keyframes pinring { from { opacity: .9; transform: scale(.8); } to { opacity: 0; transform: scale(1.55); } }
 .r3d-card { position: absolute; z-index: 3; pointer-events: none; left: 1rem; bottom: 4.7rem; width: min(380px, calc(100% - 2rem)); padding: 1rem 2.6rem 1.05rem 1.2rem; border-radius: 18px; background: rgba(255,255,255,.94); border: 1px solid rgba(210,171,136,.7);
