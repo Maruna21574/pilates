@@ -210,10 +210,7 @@
         gio.unobserve(e.target);
         ensure().then(() => { window.OPGL(e.target, e.target.dataset.gl); e.target.classList.add('ready'); }).catch(() => {});
       }), { rootMargin: '400px' });
-      /* dekorácia sa načíta až po zobrazení stránky, aby nebrzdila hero */
-      const start = () => canvases.forEach(c => gio.observe(c));
-      const later = () => (window.requestIdleCallback ? requestIdleCallback(start, { timeout: 2500 }) : setTimeout(start, 1200));
-      document.readyState === 'complete' ? later() : addEventListener('load', later, { once: true });
+      canvases.forEach(c => gio.observe(c));
     }
   }
 

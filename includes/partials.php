@@ -192,7 +192,7 @@ function video_card(string $name, string $caption = '', string $extra = '', stri
 function page_hero(string $eyebrow, string $title, string $lead = '', bool $gl = false): void { ?>
   <section class="page-hero">
     <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div><div class="grain" aria-hidden="true"></div>
-    <?php if ($gl): ?><canvas class="gl" data-gl="hero" aria-hidden="true"></canvas><?php endif; ?>
+    <?php if ($gl): ?><link rel="preload" href="assets/js/vendor/three.min.js" as="script"><canvas class="gl" data-gl="hero" aria-hidden="true"></canvas><?php endif; ?>
     <div class="wrap">
       <span class="eyebrow reveal"><?= e($eyebrow) ?></span>
       <h1 class="reveal" style="--d:.08s"><?= $title ?></h1>
