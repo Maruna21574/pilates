@@ -31,12 +31,12 @@ function class_media(array $c, string $alt): void {
 </div>
 
 <?php $n = 0; foreach ($classes as $id => $c): $rev = $n++ % 2 === 1; ?>
-<section class="section <?= $rev ? 'soft' : '' ?>" id="<?= e($id) ?>">
+<section class="section <?= $rev ? 'soft' : '' ?>">
   <div class="wrap split <?= $rev ? 'rev' : '' ?>">
     <div class="split-media reveal <?= $rev ? 'reveal-right' : 'reveal-left' ?>">
       <?php class_media($c, $c['name'] . ' – Organic Pilates Studio Žilina'); ?>
     </div>
-    <div class="reveal <?= $rev ? 'reveal-left' : 'reveal-right' ?>">
+    <div class="reveal <?= $rev ? 'reveal-left' : 'reveal-right' ?>" id="<?= e($id) ?>">
       <span class="eyebrow"><?= e($c['tag']) ?></span>
       <h2><?= e($c['name']) ?></h2>
       <p style="font-size:1.15rem;font-weight:300"><?= e($c['lead']) ?></p>
@@ -55,12 +55,12 @@ function class_media(array $c, string $alt): void {
 <?php if ($id === 'reformer') reformer_3d(); ?>
 <?php endforeach; ?>
 
-<section class="section no-deco divided" id="individualne">
+<section class="section no-deco divided">
   <div class="wrap split">
     <div class="split-media reveal reveal-left">
       <?php class_media(['images' => $individual['images'], 'name' => $individual['name']], 'Individuálna lekcia pilatesu'); ?>
     </div>
-    <div class="reveal reveal-right">
+    <div class="reveal reveal-right" id="individualne">
       <span class="eyebrow"><?= e($individual['tag']) ?></span>
       <h2><?= e($individual['name']) ?></h2>
       <p style="font-size:1.15rem;font-weight:300"><?= e($individual['lead']) ?></p>
