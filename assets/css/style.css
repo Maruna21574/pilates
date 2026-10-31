@@ -607,7 +607,7 @@ ul.svc-facts { display: flex; flex-wrap: wrap; gap: .45rem; margin: 0 0 1.3rem; 
 @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
 .notice { background: var(--t100); border-radius: 14px; padding: .9rem 1.1rem; font-size: .92rem; color: var(--t800); margin-bottom: 1.2rem; }
 
-dialog.modal { border: 0; padding: 0; border-radius: 26px; width: min(480px, 94vw); box-shadow: 0 50px 100px -30px rgba(10,30,28,.6); background: transparent; overflow: hidden; }   /* biela je len na telo okna, inak by pod zaoblením hlavičky presvital biely lem */
+dialog.modal { border: 0; padding: 0; border-radius: 26px; width: min(480px, 94vw); box-shadow: 0 50px 100px -30px rgba(10,30,28,.6); background: transparent; overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; max-height: calc(100vh - 1.5rem); max-height: calc(100dvh - 1.5rem); }   /* biela je len na telo okna, inak by pod zaoblením hlavičky presvital biely lem */
 .modal form, .modal .form-msg, .modal .done, .modal-body { background: #fff; }
 dialog.modal::backdrop { background: rgba(20,45,42,.55); backdrop-filter: blur(6px); }
 dialog.modal[open] { animation: pop .45s var(--ease); }
