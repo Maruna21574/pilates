@@ -18,6 +18,7 @@ $ld = [
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
   <title><?= e($fullTitle) ?></title>
   <?php if (!empty($baseHref)): ?><base href="<?= e($baseHref) ?>"><?php endif; ?>
   <meta name="description" content="<?= e($pageDesc) ?>">

@@ -30,6 +30,8 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+/* Safari na iPhone farbí text v tlačidlách modrou – dedíme farbu z okolia */
+button { color: inherit; }
 body {
   margin: 0; font-family: var(--font); font-weight: 400; font-size: 17px; line-height: 1.65;
   color: var(--ink); background: var(--t50);
